@@ -91,6 +91,18 @@ class PreprocessorParser(object):
 
         cmd = self.options.cpp
 
+        # Fix executable path quoting for MSVC on Windows
+        if IS_WINDOWS:
+            # Check if this looks like an unquoted executable path with spaces
+            if ' ' in cmd and not cmd.startswith('"'):
+                # Find where the executable ends (look for .exe followed by space and -)
+                exe_match = re.search(r'^([^"]*\.exe)\s+(-.*)', cmd, re.I)
+                if exe_match:
+                    exe_path, args = exe_match.groups()
+                    if ' ' in exe_path:
+                        # Quote the executable path
+                        cmd = f'"{exe_path}" {args}'
+
         # Legacy behaviour is to implicitly undefine '__GNUC__'
         # Continue doing this, unless user explicitly requested to allow it.
         if self.options.allow_gnu_c:
@@ -102,7 +114,7 @@ class PreprocessorParser(object):
             # (currently the default)
             cmd += " -U __GNUC__"
 
-        if IS_WINDOWS and re.search(r"(^|[/\\])cl(\.exe)?[ \t]", cmd, re.I):
+        if IS_WINDOWS and re.search(r"(^|[/\\])cl(\.exe)?(\"|[ \t])", cmd, re.I):
             # MSVC cl.exe
             cmd += " -nologo -d1PP"
             is_msvc = True
@@ -131,9 +143,19 @@ class PreprocessorParser(object):
             # only for non-MSVC on Windows
             cmd = ["sh.exe", "-c", cmd]
 
+
+        print("Running command: {}".format(cmd))
+
+        with open("C:/opt/grass/build/cmd.txt", "w") as f:
+            f.write(str(cmd) + "\n")
+
+        # For MSVC on Windows, use shell=True to avoid command parsing issues
+        # For non-MSVC on Windows, we already converted to list format with sh.exe
+        use_shell = True if is_msvc else (not IS_WINDOWS)
+        
         pp = subprocess.Popen(
             cmd,
-            shell=not is_msvc,
+            shell=use_shell,
             universal_newlines=False,  # binary
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -188,6 +210,10 @@ class PreprocessorParser(object):
                 define_lines.append(line)
 
         text = "".join(source_lines + define_lines)
+
+        # Normalize path separators to forward slashes for consistency
+        if IS_WINDOWS:
+            text = text.replace("\\\\", "/")
 
         if self.options.save_preprocessed_headers:
             self.cparser.handle_status(
