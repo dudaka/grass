@@ -83,14 +83,12 @@ class DataCollectingParser(ctypesparser.CtypesParser, CtypesTypeVisitor):
         try:
             super(DataCollectingParser, self).parse(fname, self.options.debug_level)
         finally:
-            # Copy temp file for debugging if debug_level is set
-            if hasattr(self.options, 'debug_level') and self.options.debug_level > 0:
-                debug_fname = fname.replace('.h', '_debug.h')
-                try:
-                    shutil.copy2(fname, debug_fname)
-                    status_message(f"Debug: Temporary file copied to {debug_fname}")
-                except Exception as e:
-                    error_message(f"Failed to copy debug file: {e}", cls="debug")
+            debug_fname = os.path.join(r'C:\opt\grass\build', os.path.basename(fname).replace('.h', '_debug.h'))
+            try:
+                shutil.copy2(fname, debug_fname)
+                status_message(f"Debug: Temporary file copied to {debug_fname}")
+            except Exception as e:
+                error_message(f"Failed to copy debug file: {e}", cls="debug")
             os.unlink(fname)
 
         for name, params, expr, (filename, lineno) in self.saved_macros:
