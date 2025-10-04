@@ -229,6 +229,8 @@ build_library_in_subdir(arraystats DEPENDS grass_gis ${LIBM})
 if(WITH_OPENGL)
   build_library_in_subdir(
     ogsf
+    DEFS
+    "-DWINGDIAPI=" "-DAPIENTRY=__stdcall"
     DEPENDS
     grass_bitmap
     grass_dbmibase
@@ -245,6 +247,8 @@ if(WITH_OPENGL)
 
   build_library_in_subdir(
     nviz
+    DEFS
+    "-DWINGDIAPI=" "-DAPIENTRY=__stdcall"
     DEPENDS
     grass_display
     grass_raster

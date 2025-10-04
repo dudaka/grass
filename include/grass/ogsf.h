@@ -20,6 +20,15 @@
 #include <grass/config.h>
 #include <grass/bitmap.h>
 #if defined(OPENGL_X11) || defined(OPENGL_WINDOWS)
+#ifdef _WIN32
+#include <windows.h>
+#ifndef WINGDIAPI
+#define WINGDIAPI __declspec(dllimport)
+#endif
+#ifndef APIENTRY
+#define APIENTRY __stdcall
+#endif
+#endif
 #include <GL/gl.h>
 #endif
 #ifdef OPENGL_AQUA

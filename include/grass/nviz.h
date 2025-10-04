@@ -4,13 +4,21 @@
 #include <grass/config.h>
 
 /*** Windows headers ***/
-#if defined(OPENGL_WINDOWS)
+#if defined(OPENGL_WINDOWS) || defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #undef WIN32_LEAN_AND_MEAN
 #include <winnt.h>
+#ifndef WINGDIAPI
+#define WINGDIAPI __declspec(dllimport)
+#endif
+#ifndef APIENTRY
+#define APIENTRY WINAPI
+#endif
 #include <GL/gl.h>
+#ifndef _WIN32
 #include <GL/glext.h>
+#endif
 
 /*** X Window System headers ***/
 #elif defined(OPENGL_X11)

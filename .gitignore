@@ -9,6 +9,7 @@ locale/scriptstrings/*
 *.tmp.md
 bin.*/*
 build
+build2
 /out/
 dist.*/*
 config.log

@@ -34,6 +34,13 @@
 #include <AGL/agl.h>
 #endif
 #elif defined(OPENGL_WINDOWS)
+#include <windows.h>
+#ifndef WINGDIAPI
+#define WINGDIAPI __declspec(dllimport)
+#endif
+#ifndef APIENTRY
+#define APIENTRY __stdcall
+#endif
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <wingdi.h>
