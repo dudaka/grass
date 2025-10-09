@@ -1,10 +1,10 @@
-# syntax=docker/dockerfile:1.18@sha256:dabfc0969b935b2080555ace70ee69a5261af8a8f1b4df97b9e7fbcf6722eddf
+# syntax=docker/dockerfile:1.19@sha256:b6afd42430b15f2d2a4c5a02b919e98a525b785b1aaff16747d2f623364e39b6
 
 # Note: This file must be kept in sync in ./Dockerfile and ./docker/ubuntu/Dockerfile.
 #       Changes to this file must be copied over to the other file.
 ARG GUI=without
 
-FROM ubuntu:24.04@sha256:353675e2a41babd526e2b837d7ec780c2a05bca0164f7ea5dbbd433d21d166fc AS common_start
+FROM ubuntu:24.04@sha256:728785b59223d755e3e5c5af178fab1be7031f3522c5ccd7a0b32b80d8248123 AS common_start
 
 ARG BASE_NAME="ubuntu:24.04"
 ARG DIGEST="sha256:353675e2a41babd526e2b837d7ec780c2a05bca0164f7ea5dbbd433d21d166fc"
